@@ -14,10 +14,9 @@ for i in 0..month - 2
   result += days[i]
 end
 
-if ((year / 400 == 0) && (year / 100 == 0))
+if (year % 4 == 0 && year % 100 != 0) || year % 400 ==0
   result += 1
-elsif (year / 4 == 0)
-  result += 1
+
 end
 
 puts "result is #{result}"
