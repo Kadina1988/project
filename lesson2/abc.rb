@@ -8,6 +8,5 @@ vowels.each do |leters|
     hash[leters] = array_abc.index(leters) + 1
   end
 end
-
-  p hash
+p hash
 
