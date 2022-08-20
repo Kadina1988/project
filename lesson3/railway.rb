@@ -50,10 +50,9 @@ class Rout
 end
 class Train
   attr_reader :speed, :wagons, :rout
-  def initialize(number, type,speed = 0, wagons = 0)
+  def initialize(number, type, wagons = 0)
     @number = number.to_i
     @type = type
-    @speed = 0
     @wagons = 0
   end
   def accelerate=(speed)
@@ -79,7 +78,7 @@ class Train
       puts "Надо остановится"
     end
   end
-  def add_rout=(rout)
+  def add_rout(rout) #вызов : Объект класса Rout.stations
     @rout = rout
     @station_idx = 0
     puts " Поезд № #{@number} находится на станции #{@rout[@station_idx]}"
