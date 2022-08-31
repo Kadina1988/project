@@ -1,8 +1,10 @@
 class PassTrain < Train
-  attr_reader :type
-  def initialize(type)
+  attr_reader :type, :number
+  def initialize(number, type)
     super
-    @type = 'passenger'
+    @number = number
+    @type = type
+    #@type = 'passenger'
   end
 
   def add_wagon(wagon)

@@ -1,11 +1,11 @@
 class Train
   attr_reader :speed, :rout, :parking_brake, :wagons
 
-  def initialize(name)
-    @name = name
+  def initialize(number, type)
     @speed = 0
     @parking_brake = 'OFF'
     @wagons =[]
+    @rout = []
   end
 
   def accelerate=(speed)
@@ -58,7 +58,7 @@ class Train
 
 
 
-  private                                  # Данные методы внесены в Privat для облегчения восприятия кода
+  #private                                  # Данные методы внесены в Privat для облегчения восприятия кода
 
   def parking!
     @parking_brake = 'ON'
