@@ -6,6 +6,7 @@ class Stationn
     @pass_trains = []
     @cargo_trains = []
   end
+
   def add_trains(train)
     @all_trains << train
     if train.type == 'passenger'
@@ -14,6 +15,7 @@ class Stationn
       @cargo_trains << train
     end
   end
+
   def departure(train)
     unless @all_trains.include?(train)
       raise 'Такой поезд отсутствует'

@@ -56,9 +56,7 @@ class Train
     @rout[@station_idx + 1]
   end
 
-
-
-  #private                                  # Данные методы внесены в Privat для облегчения восприятия кода
+  private                                  # Данные методы внесены в Privat для облегчения восприятия кода
 
   def parking!
     @parking_brake = 'ON'

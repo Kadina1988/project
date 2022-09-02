@@ -4,7 +4,6 @@ class PassTrain < Train
     super
     @number = number
     @type = type
-    #@type = 'passenger'
   end
 
   def add_wagon(wagon)
