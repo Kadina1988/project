@@ -1,4 +1,4 @@
-class Stationn
+class Station
   attr_reader :all_trains, :pass_trains, :cargo_trains, :name
   def initialize(name)
     @name = name

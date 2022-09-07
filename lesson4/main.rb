@@ -7,7 +7,7 @@ require_relative 'pass_wagon.rb'
 require_relative 'cargo_wagon.rb'
 require_relative 'interface.rb'
 
-Main.new.start
+Interface.new.start
 
 
 
