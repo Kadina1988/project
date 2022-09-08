@@ -101,6 +101,7 @@ class Interface
   end
 
   def add_station
+    menu if @stations < 3
     puts 'Выберите Номер станции'
     list_station
     choice = gets.to_i
