@@ -1,5 +1,5 @@
 class Interface
-  attr_reader :choice, :trains, :routes, :wagons, :station
+  attr_reader :choice, :trains, :routes, :wagons, :stations
   def initialize
     @stations = []
     @trains = []
@@ -86,40 +86,36 @@ class Interface
     list_station
     puts 'выбрать старт'
     stat = gets.to_i
-    if stat <= 0
+    puts 'Выбрать финиш'
+    fin = gets.to_i
+    if stat <= 0 || stat > @stations.length ||  fin <= 0 || fin == stat || fin > @stations.length
       puts 'Выбрать заново'
       create_rout
     else
       start = @stations[stat - 1]
       puts "Start- #{start.name} "
-    end
-    puts 'выбрать финиш'
-    fin = gets.to_i
-    if fin == 0 || fin == stat
-      puts 'Ввести маршрут заново'
-      create_rout
-    else
       finish = @stations[fin - 1]
       puts "Finish-#{finish.name}"
+      @routes = Rout.new(start, finish)
     end
-    @routes = Rout.new(start, finish)
   end
 
   def add_station
     puts 'Выберите Номер станции'
     list_station
     choice = gets.to_i
-    unless choice == 0 || choice == nil
+    unless choice <= 0 || choice == nil || choice > @stations.length
       station = @stations[choice - 1]
       puts 'Порядковый номер станции в маршруте'
       point = gets.to_i - 1
-      unless point == 0 && point == @routes.length
+      if point <= 0 || point >= @stations.length || point == ''
+        add_station
+      else
         @routes.stations.insert(point, station)
       end
     else
       add_station
     end
-    show_list_stations
   end
 
   def del_station
@@ -139,33 +135,44 @@ class Interface
   def create_train
     puts 'Введите номер поезда'
     number = gets.chomp.to_i
-    puts 'Ведите тип поезда: '
-    puts '1-passenger '
-    puts '2-cargo'
-    type = gets.to_i
-    case type
-    when 1
-      type = 'passenger'
-      @trains << PassTrain.new(number, type)
-      puts "#{number} пассажирский"
-    when 2
-      type = 'cargo'
-      @trains << CargoTrain.new(number, type)
-      puts "#{number} грузовой"
+    if number != 0
+      puts 'Ведите тип поезда: '
+      puts '1-passenger '
+      puts '2-cargo'
+      type = gets.to_i
+      unless type == 0 || type > 2
+        case type
+        when 1
+          type = 'passenger'
+          @trains << PassTrain.new(number, type)
+          puts "#{number} пассажирский"
+        when 2
+          type = 'cargo'
+          @trains << CargoTrain.new(number, type)
+          puts "#{number} грузовой"
+        end
+      else create_train
+      end
+    else
+      create_train
     end
   end
 
   def create_wagon
     puts 'Номер'
-    numb = gets.chomp
-    puts 'passenger or cargo'
-    type = gets.chomp
-    if type == 'passenger'
-      number = "#{numb }Pass"
-    @wagons << PassWagon.new(number, type)
-    elsif type == 'cargo'
-      number  = "#{numb }  Cargo"
-      @wagons << CargoWagon.new(number, type)
+    numb = gets.to_i
+    if numb != 0
+      puts 'passenger or cargo'
+      type = gets.chomp
+      if type == 'passenger'
+        number = "#{numb }Pass"
+      @wagons << PassWagon.new(number, type)
+      elsif type == 'cargo'
+        number  = "#{numb }  Cargo"
+        @wagons << CargoWagon.new(number, type)
+      else create_wagon
+      end
+    elsif create_wagon
     end
   end
 
@@ -186,7 +193,7 @@ class Interface
       puts 'Свободные вагоны'
       list_wagons
       wagon_number = gets.to_i
-      unless  wagon_number == 0 || wagon_number == nil
+      unless  wagon_number == 0 || wagon_number == nil || wagon_number > @wagons.length
         choice_wagon = @wagons[wagon_number - 1]
         if (choice_train.type == 'passenger' && choice_wagon.type == 'passenger') || (choice_train.type == 'cargo' && choice_wagon.type == 'cargo')
           choice_train.wagons << choice_wagon
@@ -194,7 +201,8 @@ class Interface
         else
           puts 'Неподходящий вагон'
         end
-      else add_rout_train
+      else
+        add_wagon_train
       end
     end
   end
@@ -219,23 +227,26 @@ class Interface
   end
 
   def add_rout_train
-    start if @trains.empty?
-    list_trains
-    puts 'Выбрать номер поезда'
-    train_number = gets.to_i
-    if train_number <= 0 ||  train_number == nil || train_number > @trains.size
-      puts 'Заново'
-      add_rout_train
-    else
-      choice_train = @trains[train_number - 1]
-      stations = @routes.stations
-      stations.each do |station|
-        choice_train.rout << station.name
+    if @trains.any? && @routes.stations.any?
+      list_trains
+      puts 'Выбрать номер поезда'
+      train_number = gets.to_i
+      if train_number <= 0 ||  train_number == nil || train_number > @trains.size
+        puts 'Заново'
+        add_rout_train
+      else
+        choice_train = @trains[train_number - 1]
+        stations = @routes.stations
+        stations.each do |station|
+          choice_train.rout << station.name
+        end
+        puts "Поезд на станции #{choice_train.rout[0]}"
+        @routes.stations[0].all_trains << choice_train
+        @rout_inx = 0
       end
+    else
+      menu
     end
-    puts "Поезд на станции #{choice_train.rout[0]}"
-    @routes.stations[0].all_trains << choice_train
-    @rout_inx = 0
   end
 
   def go
