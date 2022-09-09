@@ -74,7 +74,7 @@ class Interface
       @stations << Station.new(name)
       puts "Создана станция #{name}"
     else
-      create_station
+      create_station2
     end
   end
 
@@ -88,7 +88,7 @@ class Interface
     stat = gets.to_i
     puts 'Выбрать финиш'
     fin = gets.to_i
-    if stat <= 0 || stat > @stations.length ||  fin <= 0 || fin == stat || fin > @stations.length
+    if stat.nil? || fin.nil? || fin == stat
       puts 'Выбрать заново'
       create_rout
     else
@@ -107,11 +107,11 @@ class Interface
       puts 'Выберите Номер станции'
       list_station
       choice = gets.to_i
-      unless choice <= 0 || choice == nil || choice > @stations.length
+      unless choice.nil?
         station = @stations[choice - 1]
         puts 'Порядковый номер станции в маршруте'
         point = gets.to_i - 1
-        if point <= 0 || point >= @stations.length || point == ''
+        if point.nil?
           add_station
         else
           @routes.stations.insert(point, station)
@@ -128,7 +128,7 @@ class Interface
       puts "#{station.name}- #{index + 1}"
     end
     choice = gets.to_i - 1
-    if choice <= 0 || choice == nil
+    if choice.nil?
       del_station
     else
       @routes.stations.delete_at(choice)
@@ -189,7 +189,7 @@ class Interface
     list_trains
     puts 'Ввести номер поезда'
     train_number = gets.to_i
-    if train_number <= 0 ||  train_number == nil || train_number > @trains.size
+    if train_number.nil?
       puts 'Заново'
       add_wagon_train
     else
@@ -197,7 +197,7 @@ class Interface
       puts 'Свободные вагоны'
       list_wagons
       wagon_number = gets.to_i
-      unless  wagon_number == 0 || wagon_number == nil || wagon_number > @wagons.length
+      unless  wagon_number.nil?
         choice_wagon = @wagons[wagon_number - 1]
         if (choice_train.type == 'passenger' && choice_wagon.type == 'passenger') || (choice_train.type == 'cargo' && choice_wagon.type == 'cargo')
           choice_train.wagons << choice_wagon
@@ -219,7 +219,7 @@ class Interface
       list_trains
       puts 'Ввести номер поезда'
       train_number = gets.to_i
-      if train_number <= 0 ||  train_number == nil || train_number > @trains.size
+      if train_number.nil?
         puts 'Заново'
         unhuk_wagon
       else
@@ -239,11 +239,12 @@ class Interface
       list_trains
       puts 'Выбрать номер поезда'
       train_number = gets.to_i
-      if train_number <= 0 ||  train_number == nil || train_number > @trains.size
+      choice_train = @trains[train_number - 1]
+      if train_number.nil?
         puts 'Заново'
         add_rout_train
       else
-        choice_train = @trains[train_number - 1]
+
         stations = @routes.stations
         stations.each do |station|
           choice_train.rout << station.name
