@@ -265,7 +265,7 @@ class Interface
       list_trains
       puts 'Выбрать номер поезда'
       train_number = gets.to_i - 1
-      if  train_number < 0 || train_number == nil || train_number > @trains.length
+      if  train_number.nil?
         puts "Заново"
         go
       else
@@ -290,7 +290,7 @@ class Interface
       list_trains
       puts 'Выбрать номер поезда'
       train_number = gets.to_i - 1
-      if  train_number < 0 || train_number == nil || train_number > @trains.length
+      if  train_number.nil?
         puts "Заново"
         back
       else
