@@ -74,7 +74,7 @@ class Interface
       @stations << Station.new(name)
       puts "Создана станция #{name}"
     else
-      create_station2
+      create_station
     end
   end
 
@@ -85,17 +85,15 @@ class Interface
     end
     list_station
     puts 'выбрать старт'
-    stat = gets.to_i
+    stat = gets.to_i - 1
     puts 'Выбрать финиш'
-    fin = gets.to_i
-    if stat.nil? || fin.nil? || fin == stat
+    fin = gets.to_i - 1
+    start = @stations[stat]
+    finish = @stations[fin]
+    if start.nil? || finish.nil? || finish == start
       puts 'Выбрать заново'
       create_rout
     else
-      start = @stations[stat - 1]
-      puts "Start- #{start.name} "
-      finish = @stations[fin - 1]
-      puts "Finish-#{finish.name}"
       @routes = Rout.new(start, finish)
     end
   end
@@ -107,11 +105,11 @@ class Interface
       puts 'Выберите Номер станции'
       list_station
       choice = gets.to_i
-      unless choice.nil?
-        station = @stations[choice - 1]
+      station = @stations[choice - 1]
+      unless station.nil?
         puts 'Порядковый номер станции в маршруте'
         point = gets.to_i - 1
-        if point.nil?
+        if  point <= 0 || point >= @stations.length || point == ''
           add_station
         else
           @routes.stations.insert(point, station)
@@ -128,7 +126,7 @@ class Interface
       puts "#{station.name}- #{index + 1}"
     end
     choice = gets.to_i - 1
-    if choice.nil?
+    if choice <= 0 || choice == '' || choice > @routes.stations.length
       del_station
     else
       @routes.stations.delete_at(choice)
@@ -189,16 +187,16 @@ class Interface
     list_trains
     puts 'Ввести номер поезда'
     train_number = gets.to_i
-    if train_number.nil?
+    choice_train = @trains[train_number - 1]
+    if choice_train.nil?
       puts 'Заново'
       add_wagon_train
     else
-      choice_train = @trains[train_number - 1]
       puts 'Свободные вагоны'
       list_wagons
       wagon_number = gets.to_i
-      unless  wagon_number.nil?
-        choice_wagon = @wagons[wagon_number - 1]
+      choice_wagon = @wagons[wagon_number - 1]
+      unless  choice_wagon.nil?
         if (choice_train.type == 'passenger' && choice_wagon.type == 'passenger') || (choice_train.type == 'cargo' && choice_wagon.type == 'cargo')
           choice_train.wagons << choice_wagon
           @wagons.delete(choice_wagon)
@@ -206,6 +204,7 @@ class Interface
           puts 'Неподходящий вагон'
         end
       else
+        puts 'Не существующий вагон'
         add_wagon_train
       end
     end
@@ -219,11 +218,11 @@ class Interface
       list_trains
       puts 'Ввести номер поезда'
       train_number = gets.to_i
-      if train_number.nil?
+      choice_train = @trains[train_number - 1]
+      if choice_train.nil?
         puts 'Заново'
         unhuk_wagon
       else
-        choice_train = @trains[train_number - 1]
         if choice_train.wagons.empty?
           puts 'Вагонов нет'
         else
@@ -240,11 +239,10 @@ class Interface
       puts 'Выбрать номер поезда'
       train_number = gets.to_i
       choice_train = @trains[train_number - 1]
-      if train_number.nil?
+      if choice_train.nil?
         puts 'Заново'
         add_rout_train
       else
-
         stations = @routes.stations
         stations.each do |station|
           choice_train.rout << station.name
@@ -265,11 +263,11 @@ class Interface
       list_trains
       puts 'Выбрать номер поезда'
       train_number = gets.to_i - 1
-      if  train_number.nil?
+      choice_train = @trains[train_number]
+      if  choice_train.nil?
         puts "Заново"
         go
       else
-        choice_train = @trains[train_number]
         if choice_train.rout.empty?
           puts 'Поезду не назначен маршрт'
           add_rout_train
@@ -290,12 +288,12 @@ class Interface
       list_trains
       puts 'Выбрать номер поезда'
       train_number = gets.to_i - 1
-      if  train_number.nil?
+      choice_train = @trains[train_number]
+      if  choice_train.nil?
         puts "Заново"
         back
       else
         @rout_inx -= 1
-        choice_train = @trains[train_number]
         puts "Поезд #{choice_train} прибыл на станцию #{choice_train.rout[@rout_inx]}"
         @routes.stations[@rout_inx].all_trains <<  @routes.stations[@rout_inx + 1].all_trains[train_number]
         @routes.stations[@rout_inx + 1].all_trains.delete_at(train_number)
@@ -311,17 +309,18 @@ class Interface
     puts 'Выберите станцию'
     list_station
     n_station = gets.to_i - 1
-    if n_station < 0 || n_station > @stations.length
+    station = @stations[n_station]
+    if station.nil?
       puts "Попробуйте заново "
       info_stations
     else
-      puts "#{@stations[n_station].name}:"
-      if @stations[n_station].all_trains.any?
-        @stations[n_station].all_trains.each do |train|
+      puts "#{station.name}:"
+      if station.all_trains.any?
+        station.all_trains.each do |train|
           puts "#{train.number}-#{train.type}"
         end
       else
-        puts "На станции #{@stations[n_station].name} поезда отсутствуют"
+        puts "На станции #{station.name} поезда отсутствуют"
       end
     end
   end
