@@ -74,8 +74,11 @@ class Interface
       @stations << Station.new(name)
       puts "Создана станция #{name}"
     else
-      create_station
+      raise 'Введите заново'
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def create_rout
@@ -91,16 +94,18 @@ class Interface
     start = @stations[stat]
     finish = @stations[fin]
     if start.nil? || finish.nil? || finish == start
-      puts 'Выбрать заново'
-      create_rout
+      raise 'Выбрать заново '
     else
       @routes = Rout.new(start, finish)
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def add_station
     if @stations.empty? || @stations.length < 3
-      menu
+      create_station
     else
       puts 'Выберите Номер станции'
       list_station
@@ -110,14 +115,17 @@ class Interface
         puts 'Порядковый номер станции в маршруте'
         point = gets.to_i - 1
         if  point <= 0 || point >= @stations.length || point == ''
-          add_station
+          raise 'Станция не может быть добавлена в данную точку'
         else
           @routes.stations.insert(point, station)
         end
       else
-        add_station
+        raise 'Не существующая станция'
       end
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def del_station
@@ -127,11 +135,13 @@ class Interface
     end
     choice = gets.to_i - 1
     if choice <= 0 || choice == '' || choice > @routes.stations.length
-      del_station
+      raise 'Заново'
     else
       @routes.stations.delete_at(choice)
     end
-    show_list_stations
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def create_train
@@ -153,11 +163,15 @@ class Interface
           @trains << CargoTrain.new(number, type)
           puts "#{number} грузовой"
         end
-      else create_train
+      else
+      raise 'С начала'
       end
     else
-      create_train
+    raise 'Введите номер заново'
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def create_wagon
@@ -172,10 +186,15 @@ class Interface
       elsif type == 'cargo'
         number  = "#{numb }  Cargo"
         @wagons << CargoWagon.new(number, type)
-      else create_wagon
+      else
+        raise 'passenger or cargo. Создать вагон заново'
       end
-    elsif create_wagon
+    else
+      raise 'Ввести заново'
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def add_wagon_train
@@ -189,8 +208,7 @@ class Interface
     train_number = gets.to_i
     choice_train = @trains[train_number - 1]
     if choice_train.nil?
-      puts 'Заново'
-      add_wagon_train
+      raise 'Такого поезда нет'
     else
       puts 'Свободные вагоны'
       list_wagons
@@ -204,10 +222,12 @@ class Interface
           puts 'Неподходящий вагон'
         end
       else
-        puts 'Не существующий вагон'
-        add_wagon_train
+        raise 'Не существующий вагон'
       end
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def unhuk_wagon
@@ -220,8 +240,7 @@ class Interface
       train_number = gets.to_i
       choice_train = @trains[train_number - 1]
       if choice_train.nil?
-        puts 'Заново'
-        unhuk_wagon
+        raise 'Такого поезда нет'
       else
         if choice_train.wagons.empty?
           puts 'Вагонов нет'
@@ -231,6 +250,9 @@ class Interface
         end
       end
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def add_rout_train
@@ -240,8 +262,7 @@ class Interface
       train_number = gets.to_i
       choice_train = @trains[train_number - 1]
       if choice_train.nil?
-        puts 'Заново'
-        add_rout_train
+        raise 'Заново'
       else
         stations = @routes.stations
         stations.each do |station|
@@ -254,6 +275,9 @@ class Interface
     else
       menu
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def go
@@ -265,8 +289,7 @@ class Interface
       train_number = gets.to_i - 1
       choice_train = @trains[train_number]
       if  choice_train.nil?
-        puts "Заново"
-        go
+        raise "Заново"
       else
         if choice_train.rout.empty?
           puts 'Поезду не назначен маршрт'
@@ -279,6 +302,9 @@ class Interface
         end
       end
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def back
@@ -290,8 +316,7 @@ class Interface
       train_number = gets.to_i - 1
       choice_train = @trains[train_number]
       if  choice_train.nil?
-        puts "Заново"
-        back
+        raise "Выбрать Заново"
       else
         @rout_inx -= 1
         puts "Поезд #{choice_train} прибыл на станцию #{choice_train.rout[@rout_inx]}"
@@ -299,6 +324,9 @@ class Interface
         @routes.stations[@rout_inx + 1].all_trains.delete_at(train_number)
       end
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   def info_stations
@@ -311,8 +339,7 @@ class Interface
     n_station = gets.to_i - 1
     station = @stations[n_station]
     if station.nil?
-      puts "Попробуйте заново "
-      info_stations
+      raise "Попробуйте заново "
     else
       puts "#{station.name}:"
       if station.all_trains.any?
@@ -323,6 +350,9 @@ class Interface
         puts "На станции #{station.name} поезда отсутствуют"
       end
     end
+    rescue StandardError => error
+      puts error
+    retry
   end
 
   private
