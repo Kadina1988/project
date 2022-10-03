@@ -4,7 +4,7 @@ class Train
 
   attr_reader :speed, :rout, :parking_brake, :wagons, :number
 
-  @@trains = []
+  @@all = []
 
   def initialize(number, type)
     @number = number
@@ -12,12 +12,12 @@ class Train
     @parking_brake = 'OFF'
     @wagons =[]
     @rout = []
-    @@trains.push(self)
+    @@all.push(self)
     register_instance
   end
 
   def self.find(number)
-    @@trains.detect {|train| train.number == number}
+    @@all.detect {|train| train.number == number}
   end
 
 

@@ -2,7 +2,7 @@ class Station
   include InstanceCounter
   attr_reader :all_trains, :pass_trains, :cargo_trains, :name
 
-  @@all_stations = []
+  @@all = []
   @quantiti = 0
 
   def initialize(name)
@@ -10,12 +10,12 @@ class Station
     @all_trains = []
     @pass_trains = []
     @cargo_trains = []
-    @@all_stations << self
-    new_obj
+    @@all << self
+    register_instance
   end
 
   def self.all
-    @@all_stations
+    @@all
   end
 
   def add_trains(train)
