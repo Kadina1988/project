@@ -12,7 +12,7 @@ require_relative 'interface.rb'
 require_relative 'test.rb'
 
 
-# Interface.new.start
+Interface.new.start
 
 
 
