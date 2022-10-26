@@ -13,13 +13,13 @@ class Train
   def initialize(number, type)
     @type = type
     @number = number
+    validate!
     @speed = 0
     @parking_brake = 'OFF'
     @wagons =[]
     @rout = []
     @@all.push(self)
     register_instance
-    validate!
   end
 
   def self.find(number)
@@ -77,7 +77,7 @@ class Train
 
   def show_wagons
     if block_given?
-      @wagons.each {|wagon| yield(wagon)}
+      @wagons.each {|wagon| yield (wagon)}
     else
       puts 'need block'
     end

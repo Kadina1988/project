@@ -7,12 +7,12 @@ class Station
 
   def initialize(name)
     @name = name
+    validate!
     @all_trains = []
     @pass_trains = []
     @cargo_trains = []
     @@all << self
     register_instance
-    validate!
   end
 
   def self.all
@@ -48,7 +48,7 @@ class Station
 
   def show_trains
     if block_given?
-      @all_trains.each {|train| yield(train)}
+      @all_trains.each {|train| yield (train)}
     else
       puts 'Нужен блок'
     end
