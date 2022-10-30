@@ -12,3 +12,6 @@ elsif c == a && a == b
 elsif a == b || b == c || a == c
   puts 'Треугольник равнобедренный'
 end
+
+puts 'ss'
+puts 'aa'
