@@ -5,6 +5,8 @@ class Interface
     @trains = []
     @routes = []
     @wagons = []
+    @trains << PassTrain.new('333 33', 'passenger')
+    @stations << Station.new('makh') << Station.new('kiz')
   end
 
   def start
