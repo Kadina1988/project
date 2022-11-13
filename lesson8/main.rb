@@ -13,4 +13,4 @@ require_relative 'cargo_wagon'
 require_relative 'interface'
 require_relative 'test'
 
-# Interface.new.start
+Interface.new.start
