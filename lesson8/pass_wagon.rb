@@ -20,8 +20,8 @@ class PassWagon
 
   def take_a_seat
     if @free_seats != 0
-       @busy_seats += 1
-       @free_seats -= 1
+      @busy_seats += 1
+      @free_seats -= 1
     else
       puts 'Мест нет'
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Interface
   attr_reader :choice, :trains, :routes, :wagons, :stations
 
@@ -39,7 +41,7 @@ class Interface
   end
 
   def met_choice
-    choice = gets.chomp.to_i
+    gets.chomp.to_i
   end
 
   def process_choices
@@ -146,7 +148,8 @@ class Interface
     list_wagons
     wagon_number = gets.to_i
     choice_wagon = @wagons[wagon_number - 1]
-    return unless (!!choice_train && !!choice_wagon) && (choice_train.type == choice_wagon.type)
+    return unless (!choice_train.nil? && !choice_wagon.nil?) && (choice_train.type == choice_wagon.type)
+
     choice_train.wagons << choice_wagon
     @wagons.delete(choice_wagon)
   end
@@ -163,10 +166,12 @@ class Interface
 
   def add_rout_train
     return unless @trains.any? && @routes.stations.any?
+
     list_trains
     print 'choise train: '
     train_number = gets.to_i - 1
     return if @trains[train_number].nil? || @trains[train_number].rout.any?
+
     choice_train = @trains[train_number]
     @routes.stations.each { |station| choice_train.rout << station.name }
     @routes.stations[0].all_trains << choice_train
@@ -181,6 +186,7 @@ class Interface
     choice_train = @trains_with_rout[train_number]
     last_station_trains = @routes.finish.all_trains
     return if choice_train.nil? || last_station_trains.include?(choice_train)
+
     @rout_inx += 1
     @routes.stations[@rout_inx].all_trains << @routes.stations[@rout_inx - 1].all_trains[train_number]
     @routes.stations[@rout_inx - 1].all_trains.delete_at(train_number)
@@ -192,6 +198,7 @@ class Interface
     train_number = gets.to_i - 1
     choice_train = @trains_with_rout[train_number]
     return if choice_train.nil?
+
     @rout_inx -= 1
     @routes.stations[@rout_inx].all_trains << @routes.stations[@rout_inx + 1].all_trains[train_number]
     @routes.stations[@rout_inx + 1].all_trains.delete_at(train_number)
@@ -203,6 +210,7 @@ class Interface
     n_station = gets.to_i - 1
     station = @stations[n_station]
     return if station.nil?
+
     puts "#{station.name}: "
     station.all_trains.each { |train| puts "#{train.number}-#{train.type}" } if station.all_trains.any?
     puts "#{station.name} don't have trains" if station.all_trains.empty?
@@ -240,11 +248,13 @@ class Interface
     n_train = gets.to_i - 1
     train = @trains[n_train]
     return if train.nil? || train.wagons.empty?
+
     puts 'Выбрать вагон'
     train.wagons.each.with_index { |wagon, index| puts "#{index + 1}) № #{wagon.number}-#{wagon.type}" }
     ch_wagon = gets.to_i - 1
     wagon = train.wagons[ch_wagon]
     return if wagon.nil?
+
     case wagon.type
     when 'cargo'
       puts "Free volume: #{wagon.free_volume}"
@@ -266,7 +276,7 @@ class Interface
   end
 
   def show_list_stations
-    @routes.stations.each.with_index { |station, _index| puts "#{station.name}" }
+    @routes.stations.each.with_index { |station, _index| puts station.name.to_s }
   end
 
   def list_trains
