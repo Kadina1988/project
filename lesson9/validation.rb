@@ -1,17 +1,16 @@
 module Validation
-
   def self.included(receiver)
     receiver.extend         ClassMethods
     receiver.send :include, InstanceMethods
   end
 
   module ClassMethods
-    attr_accessor :validations
+    attr_reader :validations
 
     def validate(name, type, arg = "")
-      self.validations ||= []
-      rule = { type => { name: name, arg: arg } }
-      validations << rule
+      @validations ||= []
+      rule = { name: name,type: type, arg: arg }
+      @validations << rule
     end
   end
 
@@ -29,22 +28,23 @@ module Validation
     def valid?
       validate!
       true
-    rescue
+    rescue => e
+      puts e
       false
     end
 
     protected
 
-    def presence(value, arg)
-      raise "Значение не должно быть пустым" if value.nil? || value.empty?
+    def presence(value)
+      raise "Значение #{value} не должно быть пустым" if value.nil? || value.empty?
     end
 
     def format(value, format)
-      raise "Значение не соответствует формату" if value !~ format
+      raise "Значение #{value} не соответствует формату #{format}" if value !~ format
     end
 
     def type(value, attribute_class)
-      raise "Объект не соответствует классу" unless attribute_class.include? value
+      raise "Значение #{value} не соответствует классу #{attribute_class}" unless value.is_a? (attribute_class)
     end
 
     def get_instance_var_by_name(name)

@@ -18,7 +18,7 @@ module Accessors
     var_name = "@#{name}".to_sym
     define_method(name) { instance_variable_get(var_name) }
     define_method("#{name}=".to_sym) do |value|
-      raise "Не совпадает #{value.class}" unless type == value.class.to_s
+      raise "Не совпадает #{value.class} c #{type}" unless type == value.class.to_s
       instance_variable_set(var_name, value)
     end
   end
