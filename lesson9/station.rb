@@ -17,7 +17,7 @@ class Station
 
   validate :name, :presence
   validate :name, :format, FORMAT
-  validate :attribute_class, :type, "Station"
+  validate :attribute_class, :type, Station
   attr_accessor_with_history :f, :s, :w
   attr_reader :all_trains, :pass_trains, :cargo_trains, :name
 
