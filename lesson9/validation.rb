@@ -9,7 +9,7 @@ module Validation
 
     def validate(name, type, arg = "")
       @validations ||= []
-      rule = { name: name,type: type, arg: arg }
+      rule = { type => { name: name, arg: arg } }
       @validations << rule
     end
   end
@@ -28,8 +28,7 @@ module Validation
     def valid?
       validate!
       true
-    rescue => e
-      puts e
+    rescue
       false
     end
 
